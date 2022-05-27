@@ -1,0 +1,65 @@
+### Create User
+POST http://localhost/api/v1/user
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "test new user",
+    "phone": "8912121212",
+    "email": "test@test.test",
+    "password": "password"
+}
+
+### Get all Users
+GET http://localhost/api/v1/user
+Accept: application/json
+
+### Get User bi id
+GET http://localhost/api/v1/user/1
+Accept: application/json
+
+### Update User
+PUT http://localhost/api/v1/user/1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "UPDATE"
+}
+
+### Delete User by id
+DELETE http://localhost/api/v1/user/1
+
+
+
+
+### Get all Orders
+GET http://localhost/api/v1/order
+Accept: application/json
+
+### Create new Order
+POST http://localhost/api/v1/order
+Content-Type: application/json
+Accept: application/json
+
+{
+    "user_id": 1,
+    "order_price": 5000,
+    "address": "г. Ижевск ул. Камбарская д.43"
+}
+
+### Get Order bi id
+GET http://localhost/api/v1/order/3
+Accept: application/json
+
+### Update Order
+PUT http://localhost/api/v1/order/3
+Content-Type: application/json
+Accept: application/json
+
+{
+    "order_price": 123
+}
+
+### Delete Order by id
+DELETE http://localhost/api/v1/order/4

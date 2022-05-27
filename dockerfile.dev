@@ -1,0 +1,26 @@
+FROM php:7.3-fpm
+
+RUN apt-get update && apt-get install -y\
+    zip\
+    unzip\
+    git\
+    curl
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo pdo_pgsql pgsql
+
+RUN pecl config-set php_ini /usr/local/etc/php/php.ini
+
+ADD ./devops/php/php.ini /usr/local/etc/php/php.ini
+
+# Copy existing application directory contents
+COPY . .
+
+# Copy existing application directory permissions
+COPY --chown=www-data:www-data . .
+
+# Change current user to www
+USER www-data
+
+EXPOSE 9000

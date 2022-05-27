@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  #Nginx
+  nginx:
+    build:
+      context: ./devops/nginx/
+      dockerfile: dockerfile
+    working_dir: $WORKDIR
+    ports:
+      - "${NGINX_PORT}"
+    volumes:
+      - .:${WORKDIR}
+    depends_on:
+      - fpm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  #Composer
+  composer:
+    image: composer:1.10.22
+    working_dir: $WORKDIR
+    command: sh -c "composer install && php artisan key:generate"
+    depends_on:
+      - fpm
+    volumes:
+      - .:$WORKDIR
+  #Php fpm and main project files
+  fpm:
+    build:
+      context: .
+      dockerfile: dockerfile.dev
+    working_dir: $WORKDIR
+    volumes:
+      - .:$WORKDIR
+    depends_on:
+      - db
+    environment:
+      POSTGRES_DB: $DB_DATABASE
+      POSTGRES_USER: $DB_USERNAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      PGDATA: /tmp
+    user: "1001"
+
+  #Database
+  db:
+    image: postgres:10-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_DATABASE
+      POSTGRES_USER: $DB_USERNAME
+    expose:
+      - "5432"
+    ports:
+      - "${PG_PORT}"
+    volumes:
+      - $PG_DATA_VOLUMES
+    #user: postgres
+
+volumes:
+  database:
+    driver: local
